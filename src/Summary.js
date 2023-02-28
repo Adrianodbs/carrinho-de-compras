@@ -1,4 +1,4 @@
-const Summary = () => {
+const Summary = ({ total }) => {
   return (
     <>
       <div className="box">
@@ -6,7 +6,7 @@ const Summary = () => {
         <div className="info">
           <div>
             <span>Sub-total</span>
-            <span>R$ 418</span>
+            <span>R$ {total}</span>
           </div>
           <div>
             <span>Frete</span>
@@ -21,7 +21,7 @@ const Summary = () => {
         </div>
         <footer>
           <span>Total</span>
-          <span>R$ 418</span>
+          <span>R$ {total}</span>
         </footer>
       </div>
       <button>Finalizar Compra</button>

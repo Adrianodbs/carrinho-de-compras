@@ -33,13 +33,44 @@ function App() {
     })
   }
 
-  const handleRemoveItem = () => {
-    alert('clicou')
+  const handleRemoveItem = item => {
+    api.delete(`/cart/${item._id}`).then(response => {
+      fetchData()
+    })
   }
 
-  const handleUpdateItem = () => {
-    alert('clicou')
+  const handleUpdateItem = (item, action) => {
+    let newQuantity = item.quantity
+
+    if (action === 'increase') {
+      newQuantity += 1
+    }
+    if (action === 'decrease') {
+      if (newQuantity === 1) {
+        return
+      }
+      newQuantity -= 1
+    }
+
+    const newData = { ...item, quantity: newQuantity }
+    delete newData._id
+
+    api.put(`/cart/${item._id}`, newData).then(() => {
+      fetchData()
+    })
   }
+
+  const getTotal = () => {
+    let sum = 0
+
+    for (let item of cart) {
+      sum += item.price * item.quantity
+    }
+
+    return sum
+  }
+
+  const cartTotal = getTotal()
 
   return (
     <>
@@ -65,7 +96,12 @@ function App() {
               </thead>
               <tbody>
                 {cart.map(item => (
-                  <TableRow />
+                  <TableRow
+                    key={item._id}
+                    data={item}
+                    handleRemoveItem={handleRemoveItem}
+                    handleUpdateItem={handleUpdateItem}
+                  />
                 ))}
                 {cart.length === 0 && (
                   <tr>
@@ -78,7 +114,7 @@ function App() {
             </table>
           </section>
           <aside>
-            <Summary />
+            <Summary total={cartTotal} />
           </aside>
         </div>
       </main>
